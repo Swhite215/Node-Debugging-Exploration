@@ -60,4 +60,29 @@ app.use((request, response, next) => {
 
 app.use(require("./router"));
 
+//Express Error Page
+app.use((request, response) => {
+    console.warn(
+        new Date().toISOString(),
+        request.method,
+        request.originalUrl,
+        "404"
+    );
+    return response.status(404).render("404", {
+        title: "404"
+    });
+});
+
+//Error Handling Middleware
+app.use((error, request, response) => {
+    if (response.headersSent) {
+        return next(error);
+    }
+
+    console.error(error);
+    return response.status(500).render("500", {
+        title: "500"
+    });
+});
+
 module.exports = app;
