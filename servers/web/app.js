@@ -4,10 +4,12 @@ const playersClient = require("./lib/playersClient")(config.players);
 const path = require("path");
 const session = require("./session");
 const requestLogger = require("../shared/lib/requestLogger");
+const expressRequestID = require("express-request-id")();
 
 const app = express();
 
 app.set("x-powered-by", false);
+app.use(expressRequestID);
 
 app.use(express.json());
 app.use(
@@ -45,7 +47,7 @@ app.use(async (request, response, next) => {
     if (request.session.playerId) {
         return next();
     }
-    const result = await playersClient.create();
+    const result = await playersClient.create(request.id);
     request.session.playerId = result.body.id;
     return next();
 });
