@@ -3,6 +3,7 @@ const express = require("express");
 const playersClient = require("./lib/playersClient")(config.players);
 const path = require("path");
 const session = require("./session");
+const requestLogger = require("../shared/lib/requestLogger");
 
 const app = express();
 
@@ -52,11 +53,14 @@ app.use(async (request, response, next) => {
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
-//Request Logging Middleware
-app.use((request, response, next) => {
-    console.log(new Date().toISOString(), request.method, request.originalUrl);
-    return next();
-});
+//Custom Request Logging Middleware
+// app.use((request, response, next) => {
+//     console.log(new Date().toISOString(), request.method, request.originalUrl);
+//     return next();
+// });
+
+//Morgan Request Logging Middleware
+app.use(requestLogger);
 
 app.use(require("./router"));
 
