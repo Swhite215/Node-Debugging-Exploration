@@ -52,7 +52,7 @@ app.use(async (request, response, next) => {
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
 
-//Middleware
+//Request Logging Middleware
 app.use((request, response, next) => {
     console.log(new Date().toISOString(), request.method, request.originalUrl);
     return next();
